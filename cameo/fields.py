@@ -8,6 +8,7 @@ instagram_fields = {
 }
 
 media_fields = {
+    'tag': fields.String,
     'date': fields.DateTime,
     'url': fields.String,
     'type': fields.String,

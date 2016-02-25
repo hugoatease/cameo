@@ -9,6 +9,7 @@ class Instagram(EmbeddedDocument):
 
 
 class Media(Document):
+    tag = fields.StringField()
     date = fields.DateTimeField(required=True)
     url = fields.URLField(required=True)
     type = fields.StringField(required=True, choices=('photo', 'video'))

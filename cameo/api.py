@@ -4,7 +4,7 @@ from flask_restful import Api, Resource, abort, marshal_with
 from uuid import uuid4
 import hashlib, hmac
 from instagram import instagram_realtime
-from cameo import redis
+from cameo import redis, async_pool
 from schema import Media
 from fields import media_fields
 
@@ -50,14 +50,19 @@ class InstagramHub(Resource):
             # Invalid hub signature
             return abort(401)
 
-        instagram_realtime(request.get_json())
+        def instagram_event(data):
+            with current_app.app_context():
+                instagram_realtime(data)
+
+        async_pool.apply_async(instagram_event, args=[request.get_json()])
+
         return 'OK'
 
 
 class MediaApi(Resource):
     @marshal_with(media_fields)
     def get(self):
-        print Media.objects()
+        return list(Media.objects())
 
 
 api.add_resource(MediaApi, '/api/media')

@@ -15,7 +15,7 @@ def has_already_media(url):
 def instagram_add(tagname, last_id, max_tag_id=None):
     url = 'https://api.instagram.com/v1/tags/' + tagname + '/media/recent'
     params = {
-        'client_id': current_app.config.INSTAGRAM_CLIENT_ID,
+        'client_id': current_app.config['INSTAGRAM_CLIENT_ID'],
         'count': '15',
     }
 
@@ -59,6 +59,7 @@ def instagram_add(tagname, last_id, max_tag_id=None):
         )
 
         media = Media(
+            tag=tagname,
             url=url,
             type=type,
             date=utc.localize(datetime.utcfromtimestamp(float(item['created_time']))),
