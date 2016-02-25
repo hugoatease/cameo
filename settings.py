@@ -1,0 +1,9 @@
+DEBUG = True
+INSTAGRAM_CLIENT_ID = ''
+INSTAGRAM_CLIENT_SECRET = ''
+INSTAGRAM_CALLBACK = 'http://cameo.gala-isen.fr/api/instagram/hub'
+MONGODB_NAME = 'cameo'
+MONGODB_HOST = 'localhost'
+MONGODB_PORT = 27017
+REDIS_HOST = 'localhost'
+REDIS_PORT = 6379
