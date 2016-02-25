@@ -3,7 +3,7 @@ import requests
 from flask_restful import Api, Resource, abort, marshal_with
 from uuid import uuid4
 import hashlib, hmac
-from instagram import instagram_realtime
+from instagram import instagram_realtime, instagram_add
 from cameo import redis, async_pool
 from schema import Media
 from fields import media_fields
@@ -59,6 +59,11 @@ class InstagramHub(Resource):
         return 'OK'
 
 
+class InstagramFetch(Resource):
+    def post(self, tagname):
+        instagram_add(tagname, redis.get('cameo.instagram.tag.' + tagname + '.last_id'))
+
+
 class MediaApi(Resource):
     @marshal_with(media_fields)
     def get(self):
@@ -68,3 +73,4 @@ class MediaApi(Resource):
 api.add_resource(MediaApi, '/api/media')
 api.add_resource(InstagramSubscription, '/api/instagram/subscriptions/<tagname>')
 api.add_resource(InstagramHub, '/api/instagram/hub')
+api.add_resource(InstagramFetch, '/api/instagram/<tagname>/fetch')
