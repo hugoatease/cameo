@@ -3,6 +3,7 @@ import mongoengine
 from redis import Redis
 from gevent.pool import Pool
 import rollbar
+import rollbar.contrib.flask
 import os
 
 app = Flask(__name__)
