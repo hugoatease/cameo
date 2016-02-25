@@ -24,6 +24,7 @@ class InstagramSubscription(Resource):
 
         redis.set('cameo.instagram.tag.' + tagname + '.verify_token', uuid4())
         r = requests.post('https://api.instagram.com/v1/subscriptions/', data=params)
+        print r.json()
         redis.set('cameo.instagram.tag.' + tagname + '.subscription_id', r.json()['data']['id'])
         return r.content
 
