@@ -9,7 +9,7 @@ app.config.from_object('settings')
 mongoengine.connect(app.config['MONGODB_NAME'], host=app.config['MONGODB_HOST'], port=app.config['MONGODB_PORT'])
 redis = Redis(host=app.config['REDIS_HOST'], port=app.config['REDIS_PORT'])
 
+async_pool = Pool(size=1)
+
 from api import api
 api.init_app(app)
-
-async_pool = Pool(size=1)
