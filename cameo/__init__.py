@@ -1,4 +1,4 @@
-from flask import Flask, got_request_exception
+from flask import Flask, got_request_exception, render_template
 import mongoengine
 from redis import Redis
 from gevent.pool import Pool
@@ -25,3 +25,7 @@ def rollbar_handler():
 
 from api import api
 api.init_app(app)
+
+@app.route('/')
+def index():
+    return render_template('index.html')
