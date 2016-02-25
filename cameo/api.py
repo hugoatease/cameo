@@ -18,13 +18,12 @@ class InstagramSubscription(Resource):
             'client_secret': current_app.config['INSTAGRAM_CLIENT_SECRET'],
             'callback_url': current_app.config['INSTAGRAM_CALLBACK'],
             'aspect': 'media',
-            'object': object,
+            'object': 'tag',
             'object_id': tagname
         }
 
         redis.set('cameo.instagram.tag.' + tagname + '.verify_token', uuid4())
         r = requests.post('https://api.instagram.com/v1/subscriptions/', data=params)
-        print r.json()
         redis.set('cameo.instagram.tag.' + tagname + '.subscription_id', r.json()['data']['id'])
         return r.content
 
