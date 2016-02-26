@@ -1,4 +1,4 @@
-from flask import request, current_app
+from flask import request, current_app, make_response
 import requests
 from flask_restful import Api, Resource, abort, marshal_with
 from uuid import uuid4
@@ -13,19 +13,22 @@ api = Api()
 
 class InstagramSubscription(Resource):
     def post(self, tagname):
+        verify_token = uuid4()
         params = {
             'client_id': current_app.config['INSTAGRAM_CLIENT_ID'],
             'client_secret': current_app.config['INSTAGRAM_CLIENT_SECRET'],
             'callback_url': current_app.config['INSTAGRAM_CALLBACK'],
             'aspect': 'media',
             'object': 'tag',
+            'verify_token': verify_token,
             'object_id': tagname
         }
 
-        redis.set('cameo.instagram.tag.' + tagname + '.verify_token', uuid4())
+        redis.set('cameo.instagram.tag.' + tagname + '.verify_token', verify_token)
         r = requests.post('https://api.instagram.com/v1/subscriptions/', data=params)
         redis.set('cameo.instagram.tag.' + tagname + '.subscription_id', r.json()['data']['id'])
-        return r.content
+
+        return make_response('OK')
 
 
 class InstagramHub(Resource):
@@ -39,7 +42,7 @@ class InstagramHub(Resource):
     def get(self):
         if 'hub.challenge' not in request.args:
             return abort(400)
-        return request.args['hub.challenge']
+        return make_response(request.args['hub.challenge'])
 
     def post(self):
         if 'HTTP_X_HUB_SIGNATURE' not in request.headers:
@@ -56,7 +59,7 @@ class InstagramHub(Resource):
 
         async_pool.apply_async(instagram_event, args=[request.get_json()])
 
-        return 'OK'
+        return make_response('OK')
 
 
 class InstagramFetch(Resource):
