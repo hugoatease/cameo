@@ -3,7 +3,7 @@
     <title>Cameo</title>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="/static/foundation.min.css" />
+    <link rel="stylesheet" href="/static/styles.css" />
 </head>
 <body>
     <div class="row">
@@ -13,9 +13,12 @@
         </div>
     </div>
 
+    <script type="text/javascript" src="/static/vendor.js"></script>
     <script type="text/javascript" src="/static/cameo.js"></script>
     <script type="text/javascript">
-        cameo(document.getElementById('cameo'));
+        cameo(document.getElementById('cameo'), {
+            tag: 'galaisen'
+        });
     </script>
 </body>
 </html>

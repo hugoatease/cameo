@@ -2,6 +2,8 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var request = require('superagent');
 
+var PhotoItem = require('./PhotoItem');
+
 var Cameo = React.createClass({
     getDefaultProps: function() {
         return {
@@ -20,7 +22,7 @@ var Cameo = React.createClass({
     },
 
     componentDidMount: function() {
-        request.get(this.props.cameo + '/api/media').end(function(err, res) {
+        request.get(this.props.cameo + '/api/media?tag=' + this.props.tag).end(function(err, res) {
             if (err) return;
             this.setState({
                 medias: res.body
@@ -47,11 +49,7 @@ var Cameo = React.createClass({
                 <div className={this.props.gridClass}>
                     {function() {
                         return this.state.medias.slice(0, this.state.max_index).map(function(media) {
-                            return (
-                                <div className="column">
-                                    <img className="thumbnail" src={media.url} />
-                                </div>
-                            );
+                            return <PhotoItem media={media} />;
                         }.bind(this));
                     }.call(this)}
                 </div>
