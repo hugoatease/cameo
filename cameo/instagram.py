@@ -24,10 +24,7 @@ def instagram_add(tagname, last_id, max_tag_id=None):
 
     response = requests.get(url, params=params).json()
     data = response['data']
-
-    print params
-    print data
-
+    
     if 'next_max_tag_id' in response['pagination']:
         next_max_tag_id = response['pagination']['next_max_tag_id']
     else:

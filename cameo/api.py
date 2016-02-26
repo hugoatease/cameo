@@ -34,7 +34,7 @@ class InstagramSubscription(Resource):
 class InstagramHub(Resource):
     @classmethod
     def check_signature(cls, signature, content):
-        mac = hmac.new(current_app.config.INSTAGRAM_CLIENT_SECRET, digestmod=hashlib.sha1)
+        mac = hmac.new(current_app.config['INSTAGRAM_CLIENT_SECRET'], digestmod=hashlib.sha1)
         mac.update(content)
 
         return signature == mac.hexdigest()
@@ -45,19 +45,19 @@ class InstagramHub(Resource):
         return make_response(request.args['hub.challenge'])
 
     def post(self):
-        if 'HTTP_X_HUB_SIGNATURE' not in request.headers:
+        if 'X_HUB_SIGNATURE' not in request.headers:
             # Hub signature not provided
             return abort(401)
 
-        if not self.check_signature(request.headers['HTTP_X_HUB_SIGNATURE'], request.data):
+        if not self.check_signature(request.headers['X_HUB_SIGNATURE'], request.data):
             # Invalid hub signature
             return abort(401)
 
-        def instagram_event(data):
-            with current_app.app_context():
+        def instagram_event(context, data):
+            with context:
                 instagram_realtime(data)
 
-        async_pool.apply_async(instagram_event, args=[request.get_json()])
+        async_pool.apply_async(instagram_event, args=[current_app.app_context(), request.get_json()])
 
         return make_response('OK')
 
