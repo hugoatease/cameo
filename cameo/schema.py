@@ -15,3 +15,7 @@ class Media(Document):
     type = fields.StringField(required=True, choices=('photo', 'video'))
     thumbnail_url = fields.URLField()
     instagram = fields.EmbeddedDocumentField(Instagram)
+
+    meta = {
+        'ordering': ['-date']
+    }

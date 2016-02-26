@@ -70,7 +70,10 @@ class InstagramFetch(Resource):
 class MediaApi(Resource):
     @marshal_with(media_fields)
     def get(self):
-        return list(Media.objects())
+        if 'tag' in request.args:
+            return list(Media.objects(tag=request.args['tag']))
+        else:
+            return list(Media.objects())
 
 
 api.add_resource(MediaApi, '/api/media')
